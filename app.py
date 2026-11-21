@@ -109,7 +109,7 @@ with st.sidebar:
     e2_set = st.selectbox("Punktmenge", C.E2_SETS, key="e2_set", help="Die Aufzählung aller Stützmengen läuft bis n = 8; die Zufallspunkte sind 6 Punkte des Erzeugers „Zwei Gebiete mit Puffer“.")
     st.header("🧮 Experiment 3: Einzelne Punkte")
     e3_data = st.selectbox("Punktmenge ", C.E3_SETS, key="e3_data")
-    e3_point = st.slider("Punkt Nr.", *bounds("e3_point"), key="e3_point", help="Der Punkt, der entfernt oder verschoben wird; sein Etikett bekommt auch der neue Punkt. Größere Nummern als die Punktezahl werden auf die letzte begrenzt.")
+    e3_point = st.slider("Punkt Nr.", *bounds("e3_point"), key="e3_point", help="Der Punkt, der entfernt oder verschoben wird; sein Label bekommt auch der neue Punkt. Größere Nummern als die Punktezahl werden auf die letzte begrenzt.")
     e3_dist = st.select_slider("Abstand y·f des verschobenen und des neuen Punkts", options=C.E3_DIST_OPTIONS, key="e3_dist", help="0 liegt auf der Geraden, 1 auf der Randgeraden, darunter in der Marge.")
     e3_pos = st.select_slider("Lage des neuen Punkts längs der Geraden", options=C.E3_POS_OPTIONS, key="e3_pos", help="Einheit wie die Daten, vom Fußpunkt der Geraden aus gemessen.")
     st.header("⚠️ Experiment 4: Nicht trennbar")
@@ -226,8 +226,8 @@ st.markdown("---")
 
 # --- Experiment 3 --------------------------------------------------------------------------------------------------------------------------------
 st.subheader("🔬 Experiment 3: Wie viel hängt an einzelnen Punkten?")
-st.caption(f"{r3['inst'].name}, linearer Kern; gewählt ist Punkt {r3['k'] + 1} (Etikett {'+1' if r3['label'] > 0 else '−1'}). Zähleinheit Instanzen. "
-           "Entfernen, Verschieben auf den Abstand y·f und Hinzufügen eines Punkts mit demselben Etikett sind drei getrennte Rechnungen auf der Ausgangsinstanz.")
+st.caption(f"{r3['inst'].name}, linearer Kern; gewählt ist Punkt {r3['k'] + 1} (Label {'+1' if r3['label'] > 0 else '−1'}). Zähleinheit Instanzen. "
+           "Entfernen, Verschieben auf den Abstand y·f und Hinzufügen eines Punkts mit demselben Label sind drei getrennte Rechnungen auf der Ausgangsinstanz.")
 cc1, cc2 = st.columns(2)
 with cc1:
     st.plotly_chart(fig_points_lines(r3["inst"], r3["base"]["w"], r3["base"]["b"], sv=r3["base"]["sv"], title="vorher"), width="stretch", key="chart_exp3a")
@@ -294,7 +294,7 @@ with cB2:
         st.caption("libsvm (`SVC`, linear, tol 1e-3, eingefroren): " + "; ".join(
             f"C = {_cfmt(float(c))}: w = ({', '.join(ev.fmt(v, 0) for v in b1['svc'][c]['w'])}), alle α = {ev.fmt_g(b1['svc'][c]['alpha'][0], 3)}, {b1['svc'][c]['n_iter']} Aktualisierungsschritte, "
             f"Warnung: {'ja' if b1['svc'][c]['warnung'] else 'nein'}" for c in b1["svc"]))
-st.markdown("**Fall 3: ein Punkt mit beiden Etiketten**")
+st.markdown("**Fall 3: ein Punkt mit beiden Labels**")
 kind, text = ev.verdict_trap(r4c, ev.note_conflict() if r4c['kind'] == 'gauss' else '')
 getattr(st, kind)(text)
 b4 = ev.studies().get("B4")
@@ -305,7 +305,7 @@ st.markdown("**Studie mit libsvm (eingefroren): nicht trennbare Gauß-Klassen, d
 st.dataframe(pd.DataFrame(ev.b2_table()), hide_index=True, width="stretch")
 b5 = ev.studies().get("B5")
 if b5:
-    st.caption("Gegenzeile (Messung eines anderen Bausteins der Reihe, nicht hier neu gemessen; Gauß-Kern σ = 1, Gauß-Klassen mit 10 % vertauschten Etiketten, n = 60, `SVC` mit Schrittgrenze 100 000): "
+    st.caption("Gegenzeile (Messung eines anderen Bausteins der Reihe, nicht hier neu gemessen; Gauß-Kern σ = 1, Gauß-Klassen mit 10 % vertauschten Labels, n = 60, `SVC` mit Schrittgrenze 100 000): "
                "Warnung bei C = 1e2 / 1e4 / 1e6 / 1e8 in " + " / ".join(str(v) for v in b5["warnung_gepoolt"]) + f" von {b5['von']} Zufalls-Seeds. Andere Grenze, anderer Kern, anderes n, andere Daten als die Tabelle darüber: verschieden, nicht widersprüchlich. "
                "Gemeinsam gilt: bei C = 1e4 warnt der Löser kaum, bei C ≥ 1e6 an der Grenze oft, und der Rat „C = 1e4 nehmen“ gilt nur für trennbare Daten.")
 kind, text = ev.verdict_b2()

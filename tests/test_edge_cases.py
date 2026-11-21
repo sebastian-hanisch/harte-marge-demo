@@ -1,4 +1,4 @@
-"""Randfälle der harten Marge (DEMO-PLAYBOOK §12): n = 2, eine Klasse leer, gleiche Punkte, ein Punkt mit beiden Etiketten, kollineare Punkte, n über 8, Skalen,
+"""Randfälle der harten Marge (DEMO-PLAYBOOK §12): n = 2, eine Klasse leer, gleiche Punkte, ein Punkt mit beiden Labels, kollineare Punkte, n über 8, Skalen,
 Schrittgrenze, Reglerränder."""
 
 import numpy as np
@@ -37,7 +37,7 @@ def test_alle_punkte_gleich_beide_etiketten_sind_nicht_trennbar_in_jedem_kern():
     y = np.array([1.0, -1.0, 1.0, -1.0])
     for kind in ("linear", "poly2", "gauss"):
         s = P.separability(X, y, kind)
-        assert not s["separable"] and "beide Etiketten" in s["reason"]
+        assert not s["separable"] and "beide Labels" in s["reason"]
 
 
 def test_ein_punkt_mit_beiden_etiketten_ist_in_jedem_kern_nicht_trennbar_und_die_app_meldet_es():
@@ -46,7 +46,7 @@ def test_ein_punkt_mit_beiden_etiketten_ist_in_jedem_kern_nicht_trennbar_und_die
         r = ev.exp4_case(ins, kern, 100, 1e-3, 5000)
         assert not r["sep"]["separable"]
         kind, text = ev.verdict_trap(r)
-        assert kind == "error" and "NICHT trennbar" in text and "beide Etiketten" in text
+        assert kind == "error" and "NICHT trennbar" in text and "beide Labels" in text
         assert r["sol"]["violators"] >= 1  # mindestens ein Verletzer: die harte Bedingung kann nicht gelten
 
 

@@ -3,7 +3,7 @@
 Trennbar heißt: es gibt (w, b) mit y_i (w.phi(x_i) + b) >= 1 für alle i. Im Eingaberaum (und in jedem expliziten Merkmalsraum) ist das ein lineares Programm.
 Genau eins von beiden gilt: das Programm ist zulässig, oder es gibt alpha >= 0, alpha != 0 mit sum alpha_i y_i = 0 und sum alpha_i y_i phi(x_i) = 0 (Zertifikat).
 Im Merkmalsraum eines Gauß-Kerns gilt: verschiedene Punkte heißen immer trennbar (die Gram-Matrix ist positiv definit, K c = y löst y_i f(x_i) = 1), ein Punkt mit
-beiden Etiketten nie. Ein quadratischer Löser (libsvm, SLSQP, trust-constr) prüft die Voraussetzung „trennbar“ nicht; diese Datei tut es.
+beiden Labels nie. Ein quadratischer Löser (libsvm, SLSQP, trust-constr) prüft die Voraussetzung „trennbar“ nicht; diese Datei tut es.
 """
 
 import numpy as np
@@ -51,7 +51,7 @@ def certificate_residual(Phi, y, alpha) -> float:
 
 
 def duplicate_conflict(X, y, tol: float = 1e-12) -> bool:
-    """Gibt es zwei gleiche Punkte mit verschiedenen Etiketten? Dann ist die Instanz in jedem Kern nicht trennbar."""
+    """Gibt es zwei gleiche Punkte mit verschiedenen Labels? Dann ist die Instanz in jedem Kern nicht trennbar."""
     X = np.asarray(X, float)
     y = np.asarray(y, float)
     for i in range(len(y)):
@@ -83,10 +83,10 @@ def separability(X, y, kind: str = "linear") -> dict:
     if one_class(y):
         return dict(separable=False, reason="eine Klasse fehlt", certificate=None, Phi=None)
     if duplicate_conflict(X, y):
-        return dict(separable=False, reason="derselbe Punkt hat beide Etiketten: in jedem Kern nicht trennbar", certificate=None, Phi=None)
+        return dict(separable=False, reason="derselbe Punkt hat beide Labels: in jedem Kern nicht trennbar", certificate=None, Phi=None)
     if kind == "gauss":
         ok = distinct_points(X)
-        return dict(separable=ok, reason="Gauß-Kern, verschiedene Punkte: die Gram-Matrix ist positiv definit, K c = y löst y f = 1" if ok else "gleiche Punkte mit gleichem Etikett",
+        return dict(separable=ok, reason="Gauß-Kern, verschiedene Punkte: die Gram-Matrix ist positiv definit, K c = y löst y f = 1" if ok else "gleiche Punkte mit gleichem Label",
                     certificate=None, Phi=None)
     Phi = X if kind == "linear" else poly2_features(X)
     if lp_separable(Phi, y) is not None:

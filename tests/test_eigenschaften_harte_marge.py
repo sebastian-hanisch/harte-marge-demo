@@ -1,6 +1,6 @@
 """Eigenschaftstests der harten Marge (ORACLE-PLAYBOOK §5): je 20 bis 50 Zufallsinstanzen, fester Zufalls-Seed, linearer Kern, Zwei Gebiete mit Puffer.
 
-Gelten sollen: Entfernen senkt die Marge nie, Hinzufügen (trennbarkeitserhaltend) hebt sie nie, ein Nicht-Stützvektor ändert nichts, Verschieben/Drehen/Skalieren/Umnummerieren/Etiketten
+Gelten sollen: Entfernen senkt die Marge nie, Hinzufügen (trennbarkeitserhaltend) hebt sie nie, ein Nicht-Stützvektor ändert nichts, Verschieben/Drehen/Skalieren/Umnummerieren/Labels
 vertauschen verhalten sich wie erwartet, ein doppelter Punkt ändert nichts. NICHT als Eigenschaft: die Eindeutigkeit von alpha (Rechteck-Gegenprobe in test_algorithm.py)."""
 
 import math
@@ -55,7 +55,7 @@ def test_entfernen_senkt_die_marge_nie_und_hinzufuegen_hebt_sie_nie():
         keep = np.arange(ins.n) != i
         assert marge(ins.X[keep], ins.y[keep]) >= m0 * (1 - 1e-8)  # Entfernen: nie kleiner
         lo, hi = ins.X.min(0), ins.X.max(0)
-        for _ in range(30):  # zufälliger Punkt mit einem Etikett, das die Trennbarkeit erhält
+        for _ in range(30):  # zufälliger Punkt mit einem Label, das die Trennbarkeit erhält
             p = lo + (hi - lo) * np.array([rng.random(), rng.random()])
             lab = 1.0 if rng.random() < 0.5 else -1.0
             if P.lp_separable(np.vstack([ins.X, p]), np.r_[ins.y, lab]) is not None:

@@ -48,12 +48,12 @@ def _labels(n: int) -> np.ndarray:
 
 
 def _gap_of(gap, label: float) -> float:
-    """Lücke eines Etiketts: eine Zahl gilt für beide Klassen, ein Paar (Lücke der Klasse +1, Lücke der Klasse -1) ist unsymmetrisch um die wahre Grenze."""
+    """Lücke eines Labels: eine Zahl gilt für beide Klassen, ein Paar (Lücke der Klasse +1, Lücke der Klasse -1) ist unsymmetrisch um die wahre Grenze."""
     return float(gap[0] if label > 0 else gap[1]) if isinstance(gap, tuple) else float(gap)
 
 
 def puffer(n: int, gap, seed: int, rotate: bool = True) -> Instance:
-    """Zwei Gebiete mit Puffer: Lücke `gap` auf jeder Seite der wahren Grenze, Etiketten abwechselnd, Drehung um einen Zufallswinkel (nur wenn rotate)."""
+    """Zwei Gebiete mit Puffer: Lücke `gap` auf jeder Seite der wahren Grenze, Labels abwechselnd, Drehung um einen Zufallswinkel (nur wenn rotate)."""
     rng = SplitMix64(seed)
     th = 2.0 * math.pi * rng.random() if rotate else 0.0
     y = _labels(n)
@@ -75,7 +75,7 @@ def puffer_test(m: int, gap, seed: int, theta_true: float) -> Instance:
 
 
 def gauss_classes(n: int, sep: float, seed: int) -> Instance:
-    """Zwei überlappende Gauß-Klassen N((±sep/2, 0), I), Etiketten abwechselnd."""
+    """Zwei überlappende Gauß-Klassen N((±sep/2, 0), I), Labels abwechselnd."""
     rng = SplitMix64(seed)
     y = _labels(n)
     X = np.array([(rng.normal(), rng.normal()) for _ in range(n)])
@@ -120,8 +120,8 @@ def rechteck() -> Instance:
 
 
 def widerspruch(n: int, seed: int) -> Instance:
-    """Ein Punkt mit beiden Etiketten: Gauß-Klassen mit Abstand 4 plus Duplikat des ersten Punkts mit umgekehrtem Etikett (in jedem Kern nicht trennbar)."""
+    """Ein Punkt mit beiden Labels: Gauß-Klassen mit Abstand 4 plus Duplikat des ersten Punkts mit umgekehrtem Label (in jedem Kern nicht trennbar)."""
     base = gauss_classes(max(n - 1, 2), 4.0, seed)
     X = np.vstack([base.X, base.X[:1]])
     y = np.r_[base.y, -base.y[0]]
-    return Instance(X, y, "Ein Punkt mit beiden Etiketten", {"seed": seed})
+    return Instance(X, y, "Ein Punkt mit beiden Labels", {"seed": seed})

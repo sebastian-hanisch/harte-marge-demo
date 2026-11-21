@@ -15,7 +15,7 @@ from hmg_rng import SplitMix64
 # --- Daten: Handbeispiele aus handbeispiele_02.py (Stück 2) und handbeispiele_03.py (Stück 3) -------------------------------------------------
 X5 = np.array([(4, 3), (3, 1), (0, 0), (4, 1), (2, 0)], float)
 Y5 = np.array([-1, 1, -1, 1, 1], float)
-XL = np.array([0, 1, 2, 3, 4], float)[:, None]  # fünf Punkte auf der Geraden, einer (x = 3) mit dem falschen Etikett
+XL = np.array([0, 1, 2, 3, 4], float)[:, None]  # fünf Punkte auf der Geraden, einer (x = 3) mit dem falschen Label
 YL = np.array([-1, -1, 1, -1, 1], float)
 
 # Hash der Funktion `smo` (Quelltext, Zeilenenden normalisiert): die Kopien in Stück 3 und 4 müssen denselben Wert haben.
@@ -291,7 +291,7 @@ def test_umnummerieren_und_etiketten_vertauschen():
     p = np.random.default_rng(0).permutation(14)
     rp = S.smo(K[np.ix_(p, p)], y[p], 2.0, eps=1e-10)
     assert rp.dual == pytest.approx(r.dual, rel=1e-8)
-    rn = S.smo(K, -y, 2.0, eps=1e-10)  # Etiketten vertauschen: gleiche alpha, b wechselt das Vorzeichen
+    rn = S.smo(K, -y, 2.0, eps=1e-10)  # Labels vertauschen: gleiche alpha, b wechselt das Vorzeichen
     assert rn.dual == pytest.approx(r.dual, rel=1e-8) and np.allclose(rn.alpha, r.alpha, atol=1e-6) and rn.b == pytest.approx(-r.b, abs=1e-6)
 
 

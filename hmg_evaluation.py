@@ -200,7 +200,7 @@ def exp3(data: str, n: int, puffer: float, seed: int, k: int, dist: float, pos: 
     Xm[k] = p_move
     out["move"] = _hard_or_none(Xm, y)
     out["p_move"] = p_move
-    # (c) hinzufügen: Etikett des gewählten Punkts, Lage pos längs der Geraden, Abstand y f = dist
+    # (c) hinzufügen: Label des gewählten Punkts, Lage pos längs der Geraden, Abstand y f = dist
     p_add = foot + pos * tdir + lab * dist * half * wn
     out["add"] = _hard_or_none(np.vstack([X, p_add]), np.r_[y, lab])
     out["p_add"] = p_add

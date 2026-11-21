@@ -74,7 +74,7 @@ größte Marge“, ν-SVM, `class_weight` und Platt-Skalierung.
 
 
 FORMULAS = r"""
-**Lesehilfe.** Gegeben sind Punkte $x_i$ mit Etiketten $y_i \in \{-1, +1\}$ ($i = 1, \dots, n$, beide Klassen kommen vor) und ein Kern $K$ (Skalarprodukt im Merkmalsraum). Gesucht ist die trennende
+**Lesehilfe.** Gegeben sind Punkte $x_i$ mit Labels $y_i \in \{-1, +1\}$ ($i = 1, \dots, n$, beide Klassen kommen vor) und ein Kern $K$ (Skalarprodukt im Merkmalsraum). Gesucht ist die trennende
 Funktion $f$ mit der größten Marge.
 
 | Symbol | Bedeutung |
