@@ -350,11 +350,11 @@ with st.expander("📐 Mathematische Formulierung"):
     # erklaerseite:lesehilfe:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/harte-marge-erklaert.json, nicht von Hand ändern)
     st.markdown(
         r"""
-**Lesehilfe.** Gegeben sind Punkte $x_i$ mit Etiketten $y_i \in \{-1,+1\}$ und ein Kern $K$, das Skalarprodukt im Merkmalsraum. Gesucht ist die trennende Funktion $f$ mit der größten Marge; mit linearem Kern ist das eine Gerade. Das Primalproblem sucht sie direkt, das duale Problem über einen Multiplikator je Punkt.
+**Lesehilfe.** Gegeben sind Punkte $x_i$ mit Labels $y_i \in \{-1,+1\}$ und ein Kern $K$, das Skalarprodukt im Merkmalsraum. Gesucht ist die trennende Funktion $f$ mit der größten Marge; mit linearem Kern ist das eine Gerade. Das Primalproblem sucht sie direkt, das duale Problem über einen Multiplikator je Punkt.
 
 | Symbol | Bedeutung |
 |---|---|
-| $x_i$, $y_i$ | Punkt $i$ und sein Etikett, $-1$ oder $+1$ |
+| $x_i$, $y_i$ | Punkt $i$ und sein Label, $-1$ oder $+1$ |
 | $\varphi(x)$, $K$ | Abbildung in den Merkmalsraum und Kern $K(x,z)=\varphi(x)\cdot\varphi(z)$ (linear: $\varphi(x)=x$) |
 | $w$, $b$ | Normalenvektor und Verschiebung der Trennfunktion $f(x)=w\cdot\varphi(x)+b$ |
 | $\alpha_i$ | Multiplikator (Dualvariable) des Punkts $i$; ein positives $\alpha_i$ heißt Stützvektor |
