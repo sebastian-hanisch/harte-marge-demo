@@ -197,8 +197,9 @@ def test_random_ist_mit_festem_zufalls_seed_wiederholbar():
     K = X @ X.T
     a = S.smo(K, y, 1.0, eps=1e-8, wss="random", rng=SplitMix64(5))
     b = S.smo(K, y, 1.0, eps=1e-8, wss="random", rng=SplitMix64(5))
-    c = S.smo(K, y, 1.0, eps=1e-8, wss="random", rng=SplitMix64(6))
-    assert a.steps == b.steps and np.array_equal(a.alpha, b.alpha) and a.steps != c.steps
+    # andere Zufalls-Seeds laufen anders: nicht für ein einzelnes Paar (auf der Linux-CI hatten die Seeds 5 und 6 gleich viele Schritte), sondern über sechs Seeds
+    schritte = {S.smo(K, y, 1.0, eps=1e-8, wss="random", rng=SplitMix64(s)).steps for s in range(5, 11)}
+    assert a.steps == b.steps and np.array_equal(a.alpha, b.alpha) and len(schritte) > 1
 
 
 # --- Schrittgrenze mit Meldung ---------------------------------------------------------------------------------------------------------------
