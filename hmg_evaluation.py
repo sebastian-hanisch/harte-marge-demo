@@ -1,6 +1,6 @@
 """Rechnungen und Verdikte der fünf Experimente. Die Verdikte sind reine Funktionen `verdict_*(...) -> (Art, Text)`; die App ruft `getattr(st, Art)(Text)`.
 
-Zähleinheiten stehen in jedem Satz: Instanzen, Zufalls-Seeds, Aktualisierungsschritte. Die Marge heißt 2/||w||. Zahlen aus den eingefrorenen Studien (`hmg_b2.json`,
+Zähleinheiten stehen in jedem Satz: Instanzen, Zufalls-Seeds, Iterationen. Die Marge heißt 2/||w||. Zahlen aus den eingefrorenen Studien (`hmg_b2.json`,
 Werkzeug `tools/hmg_make_b2.py`) kommen über `studies()`; die App rechnet nicht mit libsvm."""
 
 import json
@@ -149,7 +149,7 @@ def verdict_exp2(r: dict):
     if nfe == 0:
         if not r["separable"]:
             return "warning", (f"Von {en.tested} gemischten Stützmengen ist keine zulässig: die Daten sind in diesem Kern nicht trennbar ({r['reason']}); es gibt keine harte Marge. "
-                               f"Das eigene SMO meldet das nach {r['solution']['steps']} Aktualisierungsschritten nicht als Fehler, sondern hält an der Schrittgrenze oder mit einem Lösungsvektor an, der die Bedingung verletzt.")
+                               f"Das eigene SMO meldet das nach {r['solution']['steps']} Iterationen nicht als Fehler, sondern hält an der Schrittgrenze oder mit einem Lösungsvektor an, der die Bedingung verletzt.")
         return "warning", f"Von {en.tested} gemischten Stützmengen ist keine zulässig, obwohl der Test „trennbar“ sagt: die Zahlenschwelle der Aufzählung ist zu eng (Kondition)."
     w_set = {tuple(np.round(M.primal_wb(r["inst"].X, r["inst"].y, f.alpha, f.b)[0], 6)) for f in r["feasible"]} if r["kind"] == "linear" else set()
     head = f"Von {en.tested} gemischten Stützmengen {'ist' if nfe == 1 else 'sind'} {nfe} zulässig; Marge 2/‖w‖ = {fmt(r['margin'])}, Dualwert {fmt(r['dual'])} (= 2/Marge² im linearen Kern)."
@@ -292,15 +292,15 @@ def verdict_trap(r: dict, note: str = ""):
     if sep["separable"]:
         head = f"{nm}: trennbar ({sep['reason']}). "
         if sol["violators"] == 0 and sol["converged"]:
-            return "success", head + f"Das eigene SMO mit C = {r['C']} erreicht die harte Bedingung (kein Punkt mit y f < 1), Marge 2/‖w‖ = {marge}, {sol['steps']} Aktualisierungsschritte."
-        return "warning", head + (f"Das eigene SMO mit C = {r['C']} verletzt die harte Bedingung bei {sol['violators']} Punkten (Multiplikatoren an der Schranke C: {sol['at_C']}), {sol['steps']} Aktualisierungsschritte"
+            return "success", head + f"Das eigene SMO mit C = {r['C']} erreicht die harte Bedingung (kein Punkt mit y f < 1), Marge 2/‖w‖ = {marge}, {sol['steps']} Iterationen."
+        return "warning", head + (f"Das eigene SMO mit C = {r['C']} verletzt die harte Bedingung bei {sol['violators']} Punkten (Multiplikatoren an der Schranke C: {sol['at_C']}), {sol['steps']} Iterationen"
                                   f"{'; ' + sol['message'] if sol['message'] else ''}: C ist hier zu klein für die Marge dieser Instanz, das ist eine Grenze des Lösers, keine Nicht-Trennbarkeit.")
     head = f"{nm}: NICHT trennbar ({sep['reason']}), es gibt keine harte Marge. "
     cert = ""
     if sep["certificate"] is not None and len(sep["certificate"]) <= 12:
         c0 = np.asarray(sep["certificate"], float)
         cert = "Zertifikat α = (" + ", ".join(fmt_g(float(a), 3) for a in c0 / c0.max()) + ") (bis auf einen Faktor): α ≥ 0, α ≠ 0, Σαy = 0 und Σαyx = 0. "
-    body = (f"Was der Löser trotzdem liefert: eine Gerade mit „Marge“ 2/‖w‖ = {marge}, {sol['violators']} Punkte mit y f < 1, {sol['errors']} falsch klassifiziert, {sol['steps']} Aktualisierungsschritte, "
+    body = (f"Was der Löser trotzdem liefert: eine Gerade mit „Marge“ 2/‖w‖ = {marge}, {sol['violators']} Punkte mit y f < 1, {sol['errors']} falsch klassifiziert, {sol['steps']} Iterationen, "
             f"Multiplikatoren an der Schranke C = {r['C']}: {sol['at_C']}. ")
     if sol["message"]:
         body += sol["message"] + ". "
@@ -320,7 +320,7 @@ def b2_table():
             "Warnung (Grenze erreicht), von 100": " / ".join(str(c["warnung"]) for c in cells),
             "ohne Warnung und mit Verletzern (y f < 1), von 100": " / ".join(str(c["ohne_warnung_mit_verletzern"]) for c in cells),
             "Verletzer je Instanz, Median (Satz A)": f"{fmt_g(cells[0]['verletzer_median'], 3)} [{cells[0]['verletzer_min']}, {cells[0]['verletzer_max']}]",
-            "Aktualisierungsschritte, Median": " / ".join(f"{int(c['schritte_median']):,}".replace(",", " ") for c in cells),
+            "Iterationen, Median": " / ".join(f"{int(c['schritte_median']):,}".replace(",", " ") for c in cells),
             "Marge 2/‖w‖, Median": " / ".join(fmt_g(c["marge_median"], 4) for c in cells),
         })
     return rows
@@ -380,7 +380,7 @@ def verdict_exp5(r: dict):
                            f"Mit einem anderen Skalarprodukt (Gauß-Kern) wird dieselbe Punktmenge trennbar: verschiedene Punkte heißen dort immer trennbar.")
     sol = r["sol"]
     txt = (f"{ins.name}: trennbar, harte Marge 2/‖w‖ = {fmt(sol['margin'])} im Merkmalsraum, {len(sol['sv'])} von {ins.n} Punkten sind Stützvektoren ({fmt(100 * r['sv_share'], 0)} %), "
-           f"{sol['steps']} Aktualisierungsschritte" + (f"; {sol['message']}" if sol["message"] else "") + ".")
+           f"{sol['steps']} Iterationen" + (f"; {sol['message']}" if sol["message"] else "") + ".")
     if "test_error" in r:
         txt += f" Testfehler {fmt(100 * r['test_error'], 2)} % an {r['n_test']} frischen Punkten desselben Modells."
     g = studies().get("G")

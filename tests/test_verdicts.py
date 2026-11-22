@@ -60,13 +60,13 @@ def _trap(sep_ok, violators, converged=True, margin=0.5, cert=None, message="", 
 
 def test_verdikt_falle_drei_zweige():
     kind, text = ev.verdict_trap(_trap(True, 0))
-    assert kind == "success" and "erreicht die harte Bedingung" in text and "Marge 2/‖w‖ = 0,500" in text and "123 Aktualisierungsschritte" in text
+    assert kind == "success" and "erreicht die harte Bedingung" in text and "Marge 2/‖w‖ = 0,500" in text and "123 Iterationen" in text
     kind, text = ev.verdict_trap(_trap(True, 4, message="Schrittgrenze 99 erreicht"))
     assert kind == "warning" and "verletzt die harte Bedingung bei 4 Punkten" in text and "Multiplikatoren an der Schranke C: 2" in text and "keine Nicht-Trennbarkeit" in text
     kind, text = ev.verdict_trap(_trap(False, 6, margin=None, cert=np.array([0.25, 0.25, 0.25, 0.25])), note=" Hinweis.")
     assert kind == "error" and text.startswith("Gauß-Klassen: NICHT trennbar") and "es gibt keine harte Marge" in text
     assert "Zertifikat α = (1, 1, 1, 1) (bis auf einen Faktor): α ≥ 0, α ≠ 0, Σαy = 0 und Σαyx = 0." in text
-    assert "„Marge“ 2/‖w‖ = nicht definiert (w = 0), 6 Punkte mit y f < 1, 1 falsch klassifiziert, 123 Aktualisierungsschritte" in text and text.endswith(" Hinweis.")
+    assert "„Marge“ 2/‖w‖ = nicht definiert (w = 0), 6 Punkte mit y f < 1, 1 falsch klassifiziert, 123 Iterationen" in text and text.endswith(" Hinweis.")
 
 
 def test_hinweise_zu_libsvm_nennen_die_zahlen_der_studie():

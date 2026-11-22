@@ -151,14 +151,14 @@ def fig_points_lines(ins, w, b, sv=None, title=None, extra_points=None, height: 
 
 
 def fig_trace(trace, eps: float, max_steps: int):
-    """KKT-Lücke je Aktualisierungsschritt (logarithmisch) mit der Abbruchschwelle eps; der Dualwert steht als zweite Kurve."""
+    """KKT-Lücke je Iteration (logarithmisch) mit der Abbruchschwelle eps; der Dualwert steht als zweite Kurve."""
     fig = go.Figure()
     steps = trace["step"]
     fig.add_trace(go.Scatter(x=steps, y=np.maximum(trace["gap"], 1e-16), mode="lines", line=dict(color=C.COLOR_NEG, width=1.6), name="KKT-Lücke"))
     fig.add_trace(go.Scatter(x=[0, max(int(steps[-1]), 1)], y=[eps, eps], mode="lines", line=dict(color=C.COLOR_MARGIN, dash="dash"), name=f"Abbruch bei {eps:g}"))
     fig.add_trace(go.Scatter(x=steps, y=trace["dual"], mode="lines", line=dict(color=C.COLOR_ALT, width=1.6), name="Dualwert", yaxis="y2"))
-    fig.update_layout(height=300, margin=dict(l=10, r=10, t=36, b=10), title=dict(text="Verlauf des Lösers: KKT-Lücke und Dualwert je Aktualisierungsschritt", font=dict(size=14)),
-                      legend=dict(orientation="h", y=-0.28), xaxis_title="Aktualisierungsschritte", yaxis=dict(title="KKT-Lücke", type="log", fixedrange=True),
+    fig.update_layout(height=300, margin=dict(l=10, r=10, t=36, b=10), title=dict(text="Verlauf des Lösers: KKT-Lücke und Dualwert je Iteration", font=dict(size=14)),
+                      legend=dict(orientation="h", y=-0.28), xaxis_title="Iterationen", yaxis=dict(title="KKT-Lücke", type="log", fixedrange=True),
                       yaxis2=dict(title="Dualwert", overlaying="y", side="right", fixedrange=True))
     fig.update_xaxes(fixedrange=True)
     return fig

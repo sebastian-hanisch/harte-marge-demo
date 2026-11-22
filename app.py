@@ -200,7 +200,7 @@ if r2["feasible"]:
     if r2.get("fusspunkte") is not None:
         fp, fn = r2["fusspunkte"]
         st.caption(f"Fußpunkte der Hüllen (Σα/Σα·x je Klasse): ({ev.fmt(fp[0], 3)}; {ev.fmt(fp[1], 3)}) und ({ev.fmt(fn[0], 3)}; {ev.fmt(fn[1], 3)}), ihr Abstand ist die Marge. "
-                   f"Gitter über 3 600 Richtungen: {ev.fmt(r2['grid'], 4)}; Abstand der konvexen Hüllen: {ev.fmt(r2['hull'], 4)}; eigenes SMO: {ev.fmt(r2['solution']['margin'], 4)} nach {r2['solution']['steps']} Aktualisierungsschritten.")
+                   f"Gitter über 3 600 Richtungen: {ev.fmt(r2['grid'], 4)}; Abstand der konvexen Hüllen: {ev.fmt(r2['hull'], 4)}; eigenes SMO: {ev.fmt(r2['solution']['margin'], 4)} nach {r2['solution']['steps']} Iterationen.")
 kind, text = ev.verdict_exp2(r2)
 getattr(st, kind)(text)
 d = ev.studies().get("D")
@@ -254,9 +254,9 @@ st.markdown("---")
 
 # --- Experiment 4 --------------------------------------------------------------------------------------------------------------------------------
 st.subheader("🔬 Experiment 4: Die Falle, nicht trennbar, und der Löser meldet nichts")
-st.caption(f"Zähleinheit Instanzen und Aktualisierungsschritte. **Zuerst der Test „trennbar?“** (lineares Programm in Gleitkomma, bei winzigen Margen nicht zuverlässig, siehe „Wo die Annahmen enden“; im Gauß-Kern: verschiedene Punkte heißen immer trennbar), dann das, was das eigene SMO "
+st.caption(f"Zähleinheit Instanzen und Iterationen. **Zuerst der Test „trennbar?“** (lineares Programm in Gleitkomma, bei winzigen Margen nicht zuverlässig, siehe „Wo die Annahmen enden“; im Gauß-Kern: verschiedene Punkte heißen immer trennbar), dann das, was das eigene SMO "
            f"mit C = {_cfmt(e4_c)}, eps = {eps4:g} und Schrittgrenze {e4_steps} liefert. Die App meldet, was libsvm nicht meldet.")
-with st.spinner(f"Das eigene SMO rechnet (bis zu {e4_steps} Aktualisierungsschritte je Fall) …"):
+with st.spinner(f"Das eigene SMO rechnet (bis zu {e4_steps} Iterationen je Fall) …"):
     r4a = _exp4_overlap(e4_n, e4_abstand, seed, kern, e4_c, eps4, e4_steps)
     r4b = _exp4_xor(kern, e4_c, eps4, e4_steps)
     r4c = _exp4_conflict(11, seed, kern, e4_c, eps4, e4_steps)
@@ -292,7 +292,7 @@ with cB2:
     b1 = ev.studies().get("B1")
     if b1:
         st.caption("libsvm (`SVC`, linear, tol 1e-3, eingefroren): " + "; ".join(
-            f"C = {_cfmt(float(c))}: w = ({', '.join(ev.fmt(v, 0) for v in b1['svc'][c]['w'])}), alle α = {ev.fmt_g(b1['svc'][c]['alpha'][0], 3)}, {b1['svc'][c]['n_iter']} Aktualisierungsschritte, "
+            f"C = {_cfmt(float(c))}: w = ({', '.join(ev.fmt(v, 0) for v in b1['svc'][c]['w'])}), alle α = {ev.fmt_g(b1['svc'][c]['alpha'][0], 3)}, {b1['svc'][c]['n_iter']} Iterationen, "
             f"Warnung: {'ja' if b1['svc'][c]['warnung'] else 'nein'}" for c in b1["svc"]))
 st.markdown("**Fall 3: ein Punkt mit beiden Labels**")
 kind, text = ev.verdict_trap(r4c, ev.note_conflict() if r4c['kind'] == 'gauss' else '')
@@ -300,7 +300,7 @@ getattr(st, kind)(text)
 b4 = ev.studies().get("B4")
 if b4:
     st.caption(f"Studie (eingefroren, {b4['instanzen']} Instanzen, Gauß-Kern σ = 1, C = 1e4): `SVC` gibt in {b4['instanzen'] - b4['warnung']} von {b4['instanzen']} Instanzen keine Warnung, "
-               f"{ev.fmt_g(b4['verletzer_min'], 2)} bis {ev.fmt_g(b4['verletzer_max'], 2)} Punkte verletzen die Bedingung, {int(b4['schritte_min'])} bis {int(b4['schritte_max'])} Aktualisierungsschritte.")
+               f"{ev.fmt_g(b4['verletzer_min'], 2)} bis {ev.fmt_g(b4['verletzer_max'], 2)} Punkte verletzen die Bedingung, {int(b4['schritte_min'])} bis {int(b4['schritte_max'])} Iterationen.")
 st.markdown("**Studie mit libsvm (eingefroren): nicht trennbare Gauß-Klassen, drei Sätze zu je 100 Instanzen** (Spalten: Satz A / B / C)")
 st.dataframe(pd.DataFrame(ev.b2_table()), hide_index=True, width="stretch")
 b5 = ev.studies().get("B5")
@@ -316,7 +316,7 @@ st.markdown("---")
 
 # --- Experiment 5 --------------------------------------------------------------------------------------------------------------------------------
 st.subheader("🔬 Experiment 5: Das Skalarprodukt tauschen")
-st.caption(f"{e5_data}, Kern {kern}; Zähleinheit Zufalls-Seeds (Studie) und Aktualisierungsschritte (live). Die Marge 2/‖w‖ ist die im Merkmalsraum des Kerns.")
+st.caption(f"{e5_data}, Kern {kern}; Zähleinheit Zufalls-Seeds (Studie) und Iterationen (live). Die Marge 2/‖w‖ ist die im Merkmalsraum des Kerns.")
 with st.spinner("Das eigene SMO rechnet …"):
     r5 = _exp5(e5_data, seed, kern)
 if r5["sep"]["separable"]:
@@ -356,7 +356,7 @@ with st.expander("📐 Mathematische Formulierung"):
 |---|---|
 | $x_i$, $y_i$ | Punkt $i$ und sein Label, $-1$ oder $+1$ |
 | $\varphi(x)$, $K$ | Abbildung in den Merkmalsraum und Kern $K(x,z)=\varphi(x)\cdot\varphi(z)$ (linear: $\varphi(x)=x$) |
-| $w$, $b$ | Normalenvektor und Verschiebung der Trennfunktion $f(x)=w\cdot\varphi(x)+b$ |
+| $w$, $b$ | Normalenvektor und Verschiebung der trennenden Funktion $f(x)=w\cdot\varphi(x)+b$ |
 | $\alpha_i$ | Multiplikator (Dualvariable) des Punkts $i$; ein positives $\alpha_i$ heißt Stützvektor |
 | $Q_{ij}$ | $y_i y_j K(x_i,x_j)$ |
 | Marge | $2/\lVert w\rVert$: Abstand der Randgeraden $y f=\pm1$ (nicht $1/\lVert w\rVert$) |

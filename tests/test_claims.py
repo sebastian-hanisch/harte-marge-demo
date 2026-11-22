@@ -111,12 +111,12 @@ def test_gauss_kern_auf_denselben_instanzen_und_widerspruch():
     assert f"{B3['A']['verletzung_1e5']} / {B3['B']['verletzung_1e5']} / {B3['C']['verletzung_1e5']} (Löser-Genauigkeit)" in README
     B4 = D["B4"]
     assert B4["instanzen"] == 30 and B4["warnung"] == 0 and 1 <= B4["verletzer_min"] <= B4["verletzer_max"] <= 3
-    assert f"keine Warnung in {B4['instanzen'] - B4['warnung']} von {B4['instanzen']}, {B4['verletzer_min']} bis {B4['verletzer_max']} Verletzer, {B4['schritte_min']} bis {B4['schritte_max']} Aktualisierungsschritte" in README
+    assert f"keine Warnung in {B4['instanzen'] - B4['warnung']} von {B4['instanzen']}, {B4['verletzer_min']} bis {B4['verletzer_max']} Verletzer, {B4['schritte_min']} bis {B4['schritte_max']} Iterationen" in README
     B1 = D["B1"]
     assert not B1["lp_trennbar"] and B1["zertifikat"] == [1.0, 1.0, 1.0, 1.0]
     assert [B1["svc"][c]["n_iter"] for c in ("1", "100", "10000")] == [3, 201, 20001] and all(B1["svc"][c]["w"] == [0.0, 0.0] and not B1["svc"][c]["warnung"] for c in B1["svc"])
     assert all(a == float(c) for c in ("1", "100", "10000") for a in B1["svc"][c]["alpha"])  # alle alpha = C
-    assert "3 / 201 / 20 001 Aktualisierungsschritte, keine Warnung" in README
+    assert "3 / 201 / 20 001 Iterationen, keine Warnung" in README
     assert D["B5"]["warnung_gepoolt"] == [0, 1, 76, 78] and D["B5"]["von"] == 180 and "0 / 1 / 76 / 78 von 180 Zufalls-Seeds" in README
 
 

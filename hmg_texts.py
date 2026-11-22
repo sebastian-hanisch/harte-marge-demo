@@ -27,9 +27,9 @@ KERNFRAGEN = (
 )
 
 LIVE_VS_STUDIE = (
-    "**Live-Modell ≠ Studie.** Die App rechnet mit einem eigenen SMO (zwei Multiplikatoren je Schritt, Arbeitsmenge zweiter Ordnung) und mit einer Schrittgrenze; die eingefrorenen Tabellen "
+    "**Live-Modell ≠ Studie.** Die App rechnet mit einem eigenen SMO (zwei Multiplikatoren je Schritt, Working-Set-Auswahl zweiter Ordnung) und mit einer Schrittgrenze; die eingefrorenen Tabellen "
     "stammen von libsvm (`SVC`, in der App nicht enthalten, nur im Messwerkzeug). Bei konvergiertem SMO geben beide denselben Dualwert (relativ 1e-9, 25 von 30 Instanzen); an der Schrittgrenze (5 von 30) liegt der Dualwert des SMO um 0,04 bis 0,5 % tiefer. "
-    "Verschieden sind die Zahl der Aktualisierungsschritte und die Meldung an der Grenze: {smo_text}"
+    "Verschieden sind die Zahl der Iterationen und die Meldung an der Grenze: {smo_text}"
 )
 
 
@@ -105,6 +105,6 @@ $$\sum_i \alpha_i y_i = 0 \quad \text{und} \quad \sum_i \alpha_i y_i \varphi(x_i
 dann gilt $\alpha^\top Q \alpha = 0$ und das Dualziel wächst längs $t\alpha$ ohne Grenze (beim XOR mit linearem Kern: $\alpha = (1, 1, 1, 1)$).
 
 Das Modell ist vollständig für die harte Marge; die weiche Marge (Schlupfvariablen, Schranke $C$) fehlt bewusst. **Quellen** (nur der gelesene Umfang, in eigenen Worten): Cortes und Vapnik 1995
-(Nebenbedingung, Marge $2/|w|$, Dual, KKT); Platt 1998 (KKT-Bedingungen, SMO); Fan, Chen und Lin 2005 (Arbeitsmenge zweiter Ordnung). Die Aussage „Dual = nächste Punkte der konvexen Hüllen“ ist hier
+(Nebenbedingung, Marge $2/|w|$, Dual, KKT); Platt 1998 (KKT-Bedingungen, SMO); Fan, Chen und Lin 2005 (Working-Set-Auswahl zweiter Ordnung). Die Aussage „Dual = nächste Punkte der konvexen Hüllen“ ist hier
 nur als eigene Rechnung bestätigt.
 """
